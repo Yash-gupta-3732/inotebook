@@ -6,7 +6,7 @@ const { body, validationResult } = require('express-validator');
 
 
 //ROUTE:1
-// get all the Notes using GET: '/api/auth/fetchallnotes'.LOGIN REQUIRED
+// get all the Notes using GET: '/api/notes/fetchallnotes'.LOGIN REQUIRED
 
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
     try {
@@ -19,7 +19,7 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
 })
 
 //ROUTE:2
-// Add a new Note using POST: '/api/auth/addnote'.LOGIN REQUIRED
+// Add a new Note using POST: '/api/notes/addnote'.LOGIN REQUIRED
 
 router.get('/addnote', fetchuser, [
     body('title', 'Enter a valid name').isLength({ min: 3 }),
@@ -43,11 +43,13 @@ router.get('/addnote', fetchuser, [
     }
 })
 
-//ROUTE:1
-// update the existing Note using PUT: '/api/auth/updatenote'.LOGIN REQUIRED
+//ROUTE:3
+// update the existing Note using PUT: '/api/notes/updatenote'.LOGIN REQUIRED
 
-router.put('/updatenote', fetchuser, async (req, res) => {
+router.put('/updatenote/:id', fetchuser, async (req, res) => {
     const {title , description , tag } = req.body;
+     try {
+        
         // create a newNote object
         const newNote = {};
         if(title){
@@ -70,6 +72,34 @@ router.put('/updatenote', fetchuser, async (req, res) => {
     }
     note = await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true})
     res.json({note});
+     }catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error"); // it give error when mongodb will go down
+    }
+})
+
+//ROUTE:4
+// delete the existing Note using DELETE: '/api/notes/deletenote'.LOGIN REQUIRED
+
+router.delete('/deletenote/:id', fetchuser, async (req, res) => {
+
+   try {
+    // find the note to be deleted and delete it
+    let note = await Notes.findById(req.params.id);
+    if(!note){
+        return res.status(404).send("Not Found");
+    }
+
+    //Allow deletion if user owns this note
+    if(note.user.toString() !== req.user.id){
+        return res.status(401).send("Not Allowed");
+    }
+    note = await Notes.findByIdAndDelete(req.params.id)
+    res.json({"Success":"Note has been deleted" ,note:note});
+     }catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error"); // it give error when mongodb will go down
+     }  
 })
 
 
