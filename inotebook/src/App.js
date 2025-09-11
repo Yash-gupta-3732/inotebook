@@ -9,6 +9,7 @@ import Navbar from './Components/Navbar';
 import Home from './Components/Home';
 import About from './Components/About';
 import NoteState from './Context/notes/noteStates';
+import Alert from './Components/Alert';
 
 
 function App() {
@@ -17,10 +18,13 @@ function App() {
       <NoteState>
         <Router>
           <Navbar />
-          <Routes>
-            <Route exact path='/' element={<Home />} />
-            <Route exact path='/About' element={<About />} />
-          </Routes>
+          <Alert message={"Beware You Are Deleting Your Notes"}/>
+          <div className="container">
+            <Routes>
+              <Route exact path='/' element={<Home />} />
+              <Route exact path='/About' element={<About />} />
+            </Routes>
+          </div>
         </Router>
       </NoteState>
     </>
