@@ -1,6 +1,5 @@
 import { useState } from "react";
 import NoteContext from "./noteContext";
-import { data } from "react-router-dom";
 
 const NoteState = (props) => {
     const host = "http://localhost:5000";
@@ -20,8 +19,8 @@ const NoteState = (props) => {
 
         });
         const json = await response.json();
-        console.log(json)
-       setNotes(json);
+        setNotes(json);
+        console.log("notes", json)
     }
 
     // Add a note
@@ -49,15 +48,15 @@ const NoteState = (props) => {
     const deleteNote = async (id) => {
         //to do api call// API CALLS
         const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
-            method: "POST",
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
             },
-            body: JSON.stringify({ data }),
 
         });
         const json = await response.json();
+        console.log(json)
 
         //logic TO DELETE IN CLIENT
         console.log("deleting the note with id" + id);
@@ -69,7 +68,7 @@ const NoteState = (props) => {
     const editNote = async (id, title, description, tag) => {
         // API CALLS
         const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
@@ -77,17 +76,14 @@ const NoteState = (props) => {
             body: JSON.stringify({ title, description, tag }),
 
         });
-        const json = await response.json();
+
 
         //logic TO EDIT IN CLIENT
-        notes.forEach((note) => {
-            if (note._id === id) {
-                note.title = title;
-                note.description = description;
-                note.tag = tag;
-            }
-        });
-
+        setNotes(notes.map(note =>
+            note._id === id
+                ? { ...note, title, description, tag }
+                : note
+        ));
 
     }
 
