@@ -10,6 +10,8 @@ import Home from './Components/Home';
 import About from './Components/About';
 import NoteState from './Context/notes/noteStates';
 import Alert from './Components/Alert';
+import Signup from './Components/Signup';
+import Login from './Components/Login';
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
             <Routes>
               <Route exact path='/' element={<Home />} />
               <Route exact path='/About' element={<About />} />
+              <Route exact path='/Login' element={<Login />} />
+              <Route exact path='/Signup' element={<Signup />} />
             </Routes>
           </div>
         </Router>
