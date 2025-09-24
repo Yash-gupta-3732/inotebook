@@ -18,11 +18,11 @@ const Modal = (props) => {
               <form>
                 <div className="mb-3">
                   <label htmlfor="title" className="form-label">Title</label>
-                  <input type="text" className="form-control" id="etitle" value={props.note.etitle} name="etitle" aria-describedby="emailHelp" onChange={props.onChange} />
+                  <input type="text" minLength={5} className="form-control" id="etitle" value={props.note.etitle} name="etitle" aria-describedby="emailHelp" onChange={props.onChange} />
                 </div>
                 <div className="mb-3">
                   <label htmlfor="description" className="form-label">Description</label>
-                  <input type="text" className="form-control" id="edescription" value={props.note.edescription} name="edescription" onChange={props.onChange} />
+                  <input type="text" minLength={5} className="form-control" id="edescription" value={props.note.edescription} name="edescription" onChange={props.onChange} />
                 </div>
 
                 <div className="mb-3">
@@ -33,7 +33,7 @@ const Modal = (props) => {
             </div>
             <div className="modal-footer">
               <button ref={props.refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={props.handleClick}>Update changes</button>
+              <button disabled={props.note.etitle.length<5 || props.note.edescription.length<5} type="button" className="btn btn-primary" onClick={props.handleClick}>Update changes</button>
             </div>
           </div>
         </div>

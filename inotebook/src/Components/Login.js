@@ -1,7 +1,8 @@
 import React from 'react'
 import {useNavigate} from 'react-router-dom';
-const Login = () => {
+const Login = (props) => {
     let navigate = useNavigate();
+    const {showAlert} = props;
     const handleSubmit= async (e)=>{
         const host = "http://localhost:5000";
         e.preventDefault();
@@ -20,15 +21,17 @@ const Login = () => {
         if(json.success){
             //save the auth-token and redirect
             localStorage.setItem('token',json.authtoken);
-           navigate("/") //to redirect to home page
+            showAlert("Loggedin Successfully","success")
+            navigate("/") //to redirect to home page
         }
         else{   
-            alert("Invalid credential");
+            showAlert("Invalid credential","danger");
         }
 
     }
     return (
-        <div className='container'>
+        <div className='container'> 
+            <h2 className='my-3'>Login to continue to iNotebook</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlfor="email" className="form-label">Email address</label>

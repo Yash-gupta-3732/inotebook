@@ -14,13 +14,13 @@ const NoteState = (props) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
+                "auth-token": localStorage.getItem('token')
             },
 
         });
         const json = await response.json();
         setNotes(json);
-        console.log("notes", json)
+       
     }
 
     // Add a note
@@ -30,15 +30,13 @@ const NoteState = (props) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
+                "auth-token": localStorage.getItem("token")
             },
             body: JSON.stringify({ title, description, tag }),
 
         });
-        console.log(response)
 
         //logic TO ADD IN CLIENT
-        console.log("adding a new note");
         const note = await response.json();
         setNotes(notes.concat(note));
 
@@ -51,15 +49,15 @@ const NoteState = (props) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
+                "auth-token":localStorage.getItem("token")
             },
 
         });
+        // eslint-disable-next-line
         const json = await response.json();
-        console.log(json)
 
         //logic TO DELETE IN CLIENT
-        console.log("deleting the note with id" + id);
+
         const newNotes = notes.filter((note) => { return note._id !== id });
         setNotes(newNotes);
     }
@@ -67,11 +65,12 @@ const NoteState = (props) => {
     // Edit a note
     const editNote = async (id, title, description, tag) => {
         // API CALLS
+        // eslint-disable-next-line
         const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzE3NGI2M2UxODY5N2RlZjY5ZDkzZiIsImlhdCI6MTc1NzUwODg0NX0.oOcJsUSbPNe88CBorDanjKplrpivUVsPOn6VJQsnVBE"
+                "auth-token": localStorage.getItem("token")
             },
             body: JSON.stringify({ title, description, tag }),
 

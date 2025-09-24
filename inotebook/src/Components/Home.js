@@ -1,41 +1,12 @@
-import React,{ useContext } from 'react'
-import noteContext from '../Context/notes/noteContext'
+import Addnote from './Addnote'
+import Notes from './Notes'
 
-const Home = () => {
-const Context = useContext(noteContext);
-
- // eslint-disable-next-line 
-const {notes,setNotes} = Context;
+const Home = (props) => {
+ const {showAlert} = props;
   return (
     <div>
-      <div className='container mx-3 my-3'>
-        <h1>Add your notes</h1>
-        <form>
-          <div className="mb-3">
-            <label for="exampleInputEmail1" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-            <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-          </div>
-          <div className="mb-3">
-            <label for="exampleInputPassword1" className="form-label">Password</label>
-            <input type="password" className="form-control" id="exampleInputPassword1" />
-          </div>
-          <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-            <label className="form-check-label" for="exampleCheck1">Check me out</label>
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
-        <h1>Your notes</h1>
-
-        {notes.map(notes=>{
-          return <div>
-            <h5>{notes.title}</h5>
-            <p>{notes.description}</p>
-          </div>
-        })}
-
-      </div>
+      <Addnote />
+      <Notes showAlert={showAlert}/>
     </div>
   )
 }

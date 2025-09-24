@@ -1,7 +1,7 @@
 import noteContext from '../Context/notes/noteContext'
 import { useContext, useEffect, useRef, useState, } from 'react'
 import Noteitem from './Noteitem'
-import emptybox from '../Asset/emptybox.gif'
+import empty1 from '../Asset/empty(1).gif'
 import { useNavigate } from 'react-router-dom'
 
 import Modal from './Modal'
@@ -41,7 +41,7 @@ const Notes = () => {
     <>
       <Modal ref={ref} note={note} refClose={refClose} handleClick={handleClick} onChange={onChange} />
       <div className='row my-3'>
-        <div className='container d-flex justify-content-center' > {notes.length === 0 && <img src={emptybox} style={{ width: "300px" }} alt="No notes to display" />}</div>
+        <div className='container d-flex justify-content-center' > {notes.length === 0 && <img src={empty1} style={{width:"220px"}}  alt="No notes to display" />}</div>
         {notes.map(note => {
           return <Noteitem key={note._id} note={note} updateNote={updateNote} />
         })}
