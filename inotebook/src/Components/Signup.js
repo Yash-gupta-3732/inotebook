@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useContext } from 'react';
 import darkmodeContext from '../Context/darkmode/darkmodeContext';
 import '../App.css'
-import BorderSVG from "../Asset/border.svg";
 const Signup = (props) => {
     let navigate = useNavigate();
     const Contextdarkmode = useContext(darkmodeContext);
