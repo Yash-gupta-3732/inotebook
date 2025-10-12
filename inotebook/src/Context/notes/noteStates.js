@@ -20,7 +20,7 @@ const NoteState = (props) => {
         });
         const json = await response.json();
         setNotes(json);
-       
+
     }
 
     // Add a note
@@ -49,7 +49,7 @@ const NoteState = (props) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token":localStorage.getItem("token")
+                "auth-token": localStorage.getItem("token")
             },
 
         });
@@ -85,9 +85,32 @@ const NoteState = (props) => {
         ));
 
     }
+    const handleShare = async (noteId) => {
+        const email = prompt("Enter the email of the user to share with:");
+        console.log(email);
+        if (!email) return;
+
+        const response = await fetch(`${host}/api/notes/share/${noteId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ email }),
+        });
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("Error response:", text);
+            alert("Failed to share note.");
+            return;
+        }
+
+        const json = await response.json();
+        alert(json.message);
+    };
 
     return (
-        <NoteContext.Provider value={{ notes, setNotes, addNote, deleteNote, editNote, getNote }}>
+        <NoteContext.Provider value={{ notes, setNotes, addNote, deleteNote, editNote, getNote, handleShare }}>
             {props.children}
         </NoteContext.Provider>
     )
