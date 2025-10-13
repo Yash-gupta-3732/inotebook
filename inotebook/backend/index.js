@@ -12,6 +12,8 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth')); // endpoints--> /api/auth , handler--> require('./routes/auth')
 app.use('/api/notes', require('./routes/notes')); // endpoints--> /api/notes , handler--> require('./routes/notes') 
 
-app.listen(port, () => {
-  console.log(`inotebook website listening on port http://localhost:${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`inotebook website listening on port http://localhost:${port}`)
+// })  replace the last line (where you use app.listen(...)) with:module.exports = app; for the deployment
+
+module.exports = app; // Vercel manages the server itself — it doesn’t want you to manually start a port.
