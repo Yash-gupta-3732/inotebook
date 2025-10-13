@@ -3,7 +3,7 @@ const express = require('express')
 const cors = require('cors')
 connTOMongo();
 const app = express()
-const port = 5000
+// const port = 5000
 app.use(cors()) // to allow access to backend from frontend
 
 app.use(express.json());
