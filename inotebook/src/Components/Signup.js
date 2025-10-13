@@ -10,7 +10,7 @@ const Signup = (props) => {
     const { showAlert } = props;
     const [credentials, setCredentials] = useState({ name: "", email: "", password: "" });
     const handleSubmit = async (e) => {
-        const host = "http://localhost:5000";
+        const host = process.env.REACT_APP_HOST //"http://localhost:5000";
         e.preventDefault();
         // API CALLS
         const response = await fetch(`${host}/api/auth/createuser`, {
