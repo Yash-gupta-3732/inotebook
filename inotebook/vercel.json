@@ -3,6 +3,5 @@
   "builds": [
     { "src": "package.json", "use": "@vercel/static-build" }
   ],
-  "ignoreCommand": "echo 'Skipping backend folder'",
   "outputDirectory": "build"
 }
