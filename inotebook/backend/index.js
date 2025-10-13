@@ -1,17 +1,27 @@
+const dotenv = require('dotenv')
+dotenv.config(); // <-- load .env first
 const connTOMongo = require("./db");
-const express = require('express')
-const cors = require('cors')
-connTOMongo();
-const app = express()
-// const port = 5000
-app.use(cors()) // to allow access to backend from frontend
+const express = require('express');
+const cors = require('cors');
+let isConnected = false;
 
+const app = express();
+app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+  if (!isConnected) {
+    connTOMongo().then(() => {
+      next();
+    });
+  } else {
+    next();
+  }
+});
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/notes', require('./routes/notes'));
 
-// Available routes
-app.use('/api/auth', require('./routes/auth')); // endpoints--> /api/auth , handler--> require('./routes/auth')
-app.use('/api/notes', require('./routes/notes')); // endpoints--> /api/notes , handler--> require('./routes/notes') 
-
+// Start server
 // app.listen(port, () => {
 //   console.log(`inotebook website listening on port http://localhost:${port}`)
 // })  replace the last line (where you use app.listen(...)) with:module.exports = app; for the deployment
