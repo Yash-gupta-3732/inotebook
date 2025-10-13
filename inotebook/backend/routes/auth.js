@@ -3,9 +3,10 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "HEYLOYASH@123$^$3";// it ensure that the data should be not tempered when the token is given to the user means the user cannot change the data to access someone else data. if any cases are found then this can be caught through the JWT_SECRET.
 const fetchuser = require('../MiddleWare/fetchuser.js');
-
+const dotenv = require("dotenv");
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
 const router = express.Router();
 
 // creating user using POST '/api/auth/createuser'. login doesn't required.
@@ -21,19 +22,19 @@ router.post(
         body('password', 'Password should contain more than 5 characters').isLength({ min: 6 }),  
     ],
     async (req, res) => {
-        console.log(req.body);
+        let success = false;
 
         const errors = validationResult(req); //The validationResult(req) function is used to check for validation errors after the middleware has run.
 
         // if there are errors it returns the bad request and the error
         if (!errors.isEmpty()) {
-            return res.status(400).json({ error: errors.array() });
+            return res.status(400).json({success, error: errors.array() });
         }
         try {
             // check whether the user with this email already exists
             let user = await User.findOne({ email: req.body.email });
             if (user) {
-                return res.status(400).json({ Error: "User with this email already exists" });
+                return res.status(400).json({ error: "User with this email already exists" });
             }
             // hashing the password
             const salt = await bcrypt.genSalt(10); // it generates a string which is added to the password to make it more secure
@@ -48,12 +49,13 @@ router.post(
             let data = {
                 id: user.id
             }
+            success = true;
             const authtoken = jwt.sign(data, JWT_SECRET);
             console.log(authtoken)
-            res.json({ authtoken })
+           return res.json({success, authtoken })
         } catch (error) {
-            console.error(error.message);
-            res.status(500).send("Internal server error"); // this message is typed because data are sending to the user which is are deliver by the server
+            console.error(success,error.message);
+            return res.status(500).send("Internal server error"); // this message is typed because data are sending to the user which is are deliver by the server
         }
     }
 );
@@ -67,6 +69,7 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
+        let success = false;
         // if there are errors it returns the bad request and the error
         if (!errors.isEmpty()) {
             return res.status(400).json({ error: errors.array() });
@@ -79,30 +82,31 @@ router.post(
             }
             const passwordcompare = await bcrypt.compare(password, user.password);
             if (!passwordcompare) {
-                return res.status(400).json({ error: "Please try to login with valid credential" });
+                success = false;
+                return res.status(400).json({ success,error: "Please try to login with valid credential" });
             }
             let data = {
                 id: user.id
             }
             const authtoken = jwt.sign(data, JWT_SECRET);
-            console.log(authtoken)
-            res.json({ authtoken })
+            success = true;
+           return res.json({success, authtoken })
 
         } catch (error) {
             console.error(error.message);
-            res.status(500).send("Internal server error"); // this message is typed because data are sending to the user which is are deliver by the server
+           return res.status(500).send("Internal server error"); // this message is typed because data are sending to the user which is are deliver by the server
         }
     })
 //ROUTE:3
-// get loggedin user detail using POST '/api/auth/login'.LOGIN REQUIRED
-router.post('/getuser', fetchuser,async (req, res) => {
+// get loggedin user detail using POST '/api/auth/getuser'.LOGIN REQUIRED
+router.post('/getuser', fetchuser ,async (req, res) => {
         try {
-            const userId = req.user.id;
+            const userId =  req.user.id;
             const user = await User.findById(userId).select("-password");
-            res.send(user);
+           return res.send(user);
       } catch (error) {
             console.error(error.message);
-            res.status(500).send("Internal server error");
+           return res.status(500).send("Internal server error");
         }
     })
 
